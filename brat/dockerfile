@@ -1,0 +1,35 @@
+FROM httpd:2.4.48
+
+RUN apt-get clean && apt-get update && apt-get install -y locales
+RUN locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8
+ENV BRAT_ARCHIVE "https://github.com/nlplab/brat/archive/refs/tags/v1.3p1.tar.gz"
+ENV BRAT_FILE brat
+ENV BRAT_DIR brat
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen && apt-get update --fix-missing && \
+    apt-get update && \
+    apt-get install -qq -y --no-install-recommends wget ca-certificates && \
+    apt-get install -y procps && \
+    rm -rf /var/lib/apt/lists/* && \
+    wget -qO /usr/local/apache2/htdocs/$BRAT_FILE.tar.gz $BRAT_ARCHIVE && \
+    tar -xvzf /usr/local/apache2/htdocs/$BRAT_FILE.tar.gz --directory /usr/local/apache2/htdocs
+RUN mv /usr/local/apache2/htdocs/`tar -tvzf /usr/local/apache2/htdocs/$BRAT_FILE.tar.gz | head -1 | grep -o "brat[^/]*" -` /usr/local/apache2/htdocs/$BRAT_DIR
+RUN rm /usr/local/apache2/htdocs/$BRAT_FILE.tar.gz && \
+    apt-get purge -y --auto-remove wget 
+
+ARG username
+ARG password
+ARG adminemail
+
+ADD httpd.conf /usr/local/apache2/conf/
+ADD install.sh /usr/local/apache2/htdocs/$BRAT_DIR/
+RUN apt-get update && apt-get install -y python
+
+RUN /usr/local/apache2/htdocs/$BRAT_DIR/install.sh $username $password $adminemail
+
+#RUN FastCGI 
+#RUN cd /usr/local/apache2/htdocs/$BRAT_DIR/server/lib/ && tar xfz flup-1.0.2.tar.gz 
+
