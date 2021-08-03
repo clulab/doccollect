@@ -7,7 +7,7 @@ from pdfminer.converter import TextConverter
 from pdfminer.pdfpage import PDFPage
 
 def extract_text(filename):
-    with StringIO() as output, open(filename, 'rb') as f:
+    with open(filename, 'rb') as f, StringIO() as output:
         parser = PDFParser(f)
         doc = PDFDocument(parser)
         manager = PDFResourceManager()
