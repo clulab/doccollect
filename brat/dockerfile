@@ -26,6 +26,7 @@ ARG adminemail
 
 ADD httpd.conf /usr/local/apache2/conf/
 ADD install.sh /usr/local/apache2/htdocs/$BRAT_DIR/
+RUN chmod u+x /usr/local/apache2/htdocs/$BRAT_DIR/install.sh
 RUN apt-get update && apt-get install -y python
 
 RUN /usr/local/apache2/htdocs/$BRAT_DIR/install.sh $username $password $adminemail
