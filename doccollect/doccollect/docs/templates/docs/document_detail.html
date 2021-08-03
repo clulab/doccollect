@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ block.super }} :: view document{% endblock %}
+{% block content %}
+<h1>{{ object.title }}</h1>
+<a href="{{ object.file.url }}" download="{{ object.file.url }}"> Download File</a>
+<hr>
+<h2>Attributes</h2>
+<ul>
+    {% for attr in object.attributes.all %}
+        <li>{{ attr.name }}: {{ attr.value }}</a></li>
+    {% empty %}
+        <li>no attributes</li>
+    {% endfor %}
+</ul>
+<hr>
+<h2>Text</h2>
+<br>
+{{ object.text | linebreaks }}
+{% endblock content %}

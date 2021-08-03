@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} :: submit document{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            Submit document
+        </div>
+        <div class="card-body">
+             {% crispy form %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
