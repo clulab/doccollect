@@ -1,4 +1,5 @@
-FROM httpd:2.4.48
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND "noninteractive"
 
 RUN apt-get clean && apt-get update && apt-get install -y locales
 RUN locale-gen en_US.UTF-8  
@@ -10,27 +11,37 @@ ENV BRAT_FILE brat
 ENV BRAT_DIR brat
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen && apt-get update --fix-missing && \
-    apt-get update && \
     apt-get install -qq -y --no-install-recommends wget ca-certificates && \
-    apt-get install -y procps && \
-    rm -rf /var/lib/apt/lists/* && \
-    wget -qO /usr/local/apache2/htdocs/$BRAT_FILE.tar.gz $BRAT_ARCHIVE && \
-    tar -xvzf /usr/local/apache2/htdocs/$BRAT_FILE.tar.gz --directory /usr/local/apache2/htdocs
-RUN mv /usr/local/apache2/htdocs/`tar -tvzf /usr/local/apache2/htdocs/$BRAT_FILE.tar.gz | head -1 | grep -o "brat[^/]*" -` /usr/local/apache2/htdocs/$BRAT_DIR
-RUN rm /usr/local/apache2/htdocs/$BRAT_FILE.tar.gz && \
+    apt-get install -y procps python apache2 apache2-utils apache2-dev python3 python3-pip libapache2-mod-wsgi-py3 && \
+    rm -rf /var/lib/apt/lists/* && \ 
+    wget -qO /var/www/html/$BRAT_FILE.tar.gz $BRAT_ARCHIVE && \
+    tar -xvzf /var/www/html/$BRAT_FILE.tar.gz --directory /var/www/html
+RUN mv /var/www/html/`tar -tvzf /var/www/html/$BRAT_FILE.tar.gz | head -1 | grep -o "brat[^/]*" -` /var/www/html/$BRAT_DIR
+RUN rm /var/www/html/$BRAT_FILE.tar.gz && \
     apt-get purge -y --auto-remove wget 
 
 ARG username
 ARG password
 ARG adminemail
 
-ADD httpd.conf /usr/local/apache2/conf/
-ADD install.sh /usr/local/apache2/htdocs/$BRAT_DIR/
-RUN chmod u+x /usr/local/apache2/htdocs/$BRAT_DIR/install.sh
-RUN apt-get update && apt-get install -y python
-
-RUN /usr/local/apache2/htdocs/$BRAT_DIR/install.sh $username $password $adminemail
-
+RUN a2enmod cgi
+ADD 000-default.conf /etc/apache2/sites-available/
+ADD install.sh /var/www/html/$BRAT_DIR/
+RUN chmod u+x /var/www/html/$BRAT_DIR/install.sh
+RUN /var/www/html/$BRAT_DIR/install.sh $username $password $adminemail
+RUN chown -R www-data:www-data /var/www/html
 #RUN FastCGI 
 #RUN cd /usr/local/apache2/htdocs/$BRAT_DIR/server/lib/ && tar xfz flup-1.0.2.tar.gz 
 
+# django app
+ENV DOCCOLLECT_DIR doccollect
+RUN pip3 install django django-crispy-forms pdfminer-six
+ADD doccollect /var/www/html/${DOCCOLLECT_DIR}/
+WORKDIR /var/www/html/${DOCCOLLECT_DIR}/
+RUN python3 manage.py makemigrations && python3 manage.py migrate
+
+RUN service apache2 start
+EXPOSE 9000
+EXPOSE 9001
+
+CMD ["apache2ctl", "-D", "FOREGROUND"]

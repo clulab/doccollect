@@ -14,17 +14,18 @@ Brat login requires username, password and admin email to be mentioned by the us
 
 To build the dockerfile: 
 
-	$ docker build --build-arg username=<Username> --build-arg password=<Password> --build-arg admin_email=<email ID> -t brat .
+	$ docker build --build-arg username=<Username> --build-arg password=<Password> --build-arg adminemail=<email ID> -t brat .
 
 > `<Username>`, `<Password>` and `<email ID>` are login credentials to be provided by the user
 
 To run the built image: 
 
-	$ docker run --name brat_instance -p 80:80 -d brat
+	$ docker run --name brat_instance -p 9000:9000 -p 9001:9001 -d brat
 
 To open the application:
 
-Open the browser and enter the address : http://localhost/brat-v1.3_Crunchy_Frog/
+Brat: Open the browser and enter the address : http://localhost:9000/
+Doccollect: Open the browser and enter the address : http://localhost:9001/
 
 To stop all running containers: 
 ```
