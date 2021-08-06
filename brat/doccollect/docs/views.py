@@ -1,3 +1,4 @@
+from pathlib import Path
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
@@ -38,6 +39,16 @@ class DocumentCreateView(CreateView):
         with transaction.atomic():
             self.object = form.save()
             self.object.text = extract_text(self.object.file.path)
+            # also save text in brat's data directory
+            brat_dir = Path('/var/www/html/brat/data/doccollect')
+            pdf_name = Path(self.object.file.path).name
+            txt_name = pdf_name + '.txt'
+            with open(brat_dir/txt_name, 'w') as f:
+                f.write(self.object.text)
+            # write empty annotations file
+            ann_name = pdf_name + '.ann'
+            with open(brat_dir/ann_name, 'w') as f:
+                pass
             if attributes.is_valid():
                 attributes.instance = self.object
                 attributes.save()
