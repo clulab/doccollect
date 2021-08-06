@@ -20,7 +20,7 @@ To build the dockerfile:
 
 To run the built image: 
 
-	$ docker run --name brat_instance -p 9000:9000 -p 9001:9001 -d brat
+	$ docker run -v /local/path/to/files:/var/www/html/brat/data/doccollect --name brat_instance -p 9000:9000 -p 9001:9001 -d brat
 
 To open the application:
 
