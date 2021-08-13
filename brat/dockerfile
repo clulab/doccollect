@@ -43,7 +43,7 @@ RUN python3 manage.py makemigrations && python3 manage.py migrate
 
 RUN chown -R www-data:www-data /var/www/html
 RUN service apache2 start
-EXPOSE 9000
-EXPOSE 9001
+EXPOSE 9002
+EXPOSE 9003
 
 CMD ["apache2ctl", "-D", "FOREGROUND"]

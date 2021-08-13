@@ -1,10 +1,11 @@
 # doccollect
 
 The docker container deploys two apps: brat and doccollect.
-Brat is accessible at localhost:9000, and doccollect is accessible at localhost:9001.
+By default, brat is accessible at localhost:9002, and doccollect is accessible at localhost:9003.
+(This is so that we can deploy on our server without remapping the ports.)
 
-Doccollect exposes a list of all uploaded documents at localhost:9001/docs
-and a form to upload documents at localhost:9001/docs/create.
+Doccollect exposes a list of all uploaded documents at localhost:9003/docs
+and a form to upload documents at localhost:9003/docs/create.
 
 Once PDFs have been submitted through doccollect, they become
 available for annotation at brat in the doccollect directory.
