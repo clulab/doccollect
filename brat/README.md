@@ -10,7 +10,7 @@ Brat - Brat Rapid Annotation Tool is an online environment for collaborative tex
 - Operating systems: Linux, MacOS or Windows
 - System requirements: minimum 8GB of memory
 
-Brat login requires username, password and admin email to be mentioned by the user. These arguements are specified in the dockerfile. User is required to provide the values while builing the dockerfile.
+Brat login requires username, password and admin email to be mentioned by the user. These arguments are specified in the dockerfile. User is required to provide the values while builing the dockerfile.
 
 To build the dockerfile: 
 
