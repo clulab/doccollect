@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-x4$uji-bqg_7gy@ai*=97vkc#l%$7ou#tsg3t%o*5l_!x=@qto
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['brat.cs.arizona.edu', 'river.cs.arizona.edu', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['docs.clulab.org', 'docs.cs.arizona.edu', 'brat.cs.arizona.edu', 'river.cs.arizona.edu', 'localhost', '127.0.0.1']
 
 
 # Application definition
